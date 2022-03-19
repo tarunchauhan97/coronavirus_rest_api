@@ -1,3 +1,4 @@
+import 'package:coronavirus_rest_api_flutter_course/app/repositories/endpoints_data.dart';
 import 'package:coronavirus_rest_api_flutter_course/app/services/api.dart';
 import 'package:coronavirus_rest_api_flutter_course/app/services/api_service.dart';
 import 'package:http/http.dart';
@@ -23,14 +24,21 @@ class DataRepository {
     }
   }
 
-  Future<void> _getAllEndpointsData() async {
-    await Future.wait([
+  Future<EndPointsData> _getAllEndpointsData() async {
+    final values = await Future.wait([
       apiService.getEndpointData(accessToken: _accessToken, endPoint: EndPoint.cases),
       apiService.getEndpointData(accessToken: _accessToken, endPoint: EndPoint.casesSuspected),
       apiService.getEndpointData(accessToken: _accessToken, endPoint: EndPoint.casesConfirmed),
       apiService.getEndpointData(accessToken: _accessToken, endPoint: EndPoint.deaths),
       apiService.getEndpointData(accessToken: _accessToken, endPoint: EndPoint.recovered),
     ]);
+    return EndPointsData(values: {
+      EndPoint.cases: values[0],
+      EndPoint.casesSuspected: values[1],
+      EndPoint.casesConfirmed: values[2],
+      EndPoint.deaths: values[3],
+      EndPoint.recovered: values[4],
+    });
   }
 
 // Future<int> getEndPointData(EndPoint endPoint) async {
