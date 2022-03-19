@@ -24,6 +24,36 @@ class DataRepository {
     }
   }
 
+  Future<EndPointsData> getAllEndPointsData() async {
+    try {
+      if (_accessToken == null) {
+        _accessToken = await apiService.getAccessToken();
+      }
+      return await _getAllEndpointsData();
+    } on Response catch (response) {
+      if (response.statusCode == 401) {
+        _accessToken = await apiService.getAccessToken();
+        return await _getAllEndpointsData();
+      }
+      rethrow;
+    }
+  }
+
+  // Future<T> _getDataRefreshingToken<T>({Future<T> Function() onGetData}) async {
+  //   try {
+  //     if (_accessToken == null) {
+  //       _accessToken = await apiService.getAccessToken();
+  //     }
+  //     return await onGetData();
+  //   } on Response catch (response) {
+  //     if (response.statusCode == 401) {
+  //       _accessToken = await apiService.getAccessToken();
+  //       return await onGetData();
+  //     }
+  //     rethrow;
+  //   }
+  // }
+
   Future<EndPointsData> _getAllEndpointsData() async {
     final values = await Future.wait([
       apiService.getEndpointData(accessToken: _accessToken, endPoint: EndPoint.cases),

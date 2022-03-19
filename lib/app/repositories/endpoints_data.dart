@@ -1,5 +1,4 @@
 import 'package:coronavirus_rest_api_flutter_course/app/services/api.dart';
-import 'data_repositories.dart';
 
 class EndPointsData {
   EndPointsData({required this.values});
