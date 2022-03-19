@@ -9,50 +9,31 @@ class DataRepository {
   final APIService apiService;
   String _accessToken = '';
 
-  Future<int> getEndPointData(EndPoint endPoint) async {
+  Future<int> getEndPointData(EndPoint endPoint) async => await _getDataRefreshingToken<int>(
+        onGetData: () => apiService.getEndpointData(
+          accessToken: _accessToken,
+          endPoint: endPoint,
+        ),
+      );
+
+  Future<EndPointsData> getAllEndPointsData() async => await _getDataRefreshingToken<EndPointsData>(
+        onGetData: _getAllEndpointsData,
+      );
+
+  Future<T> _getDataRefreshingToken<T>({required Future<T> Function() onGetData}) async {
     try {
       if (_accessToken == null) {
         _accessToken = await apiService.getAccessToken();
       }
-      return await apiService.getEndpointData(accessToken: _accessToken, endPoint: endPoint);
+      return await onGetData();
     } on Response catch (response) {
       if (response.statusCode == 401) {
         _accessToken = await apiService.getAccessToken();
-        return await apiService.getEndpointData(accessToken: _accessToken, endPoint: endPoint);
+        return await onGetData();
       }
       rethrow;
     }
   }
-
-  Future<EndPointsData> getAllEndPointsData() async {
-    try {
-      if (_accessToken == null) {
-        _accessToken = await apiService.getAccessToken();
-      }
-      return await _getAllEndpointsData();
-    } on Response catch (response) {
-      if (response.statusCode == 401) {
-        _accessToken = await apiService.getAccessToken();
-        return await _getAllEndpointsData();
-      }
-      rethrow;
-    }
-  }
-
-  // Future<T> _getDataRefreshingToken<T>({Future<T> Function() onGetData}) async {
-  //   try {
-  //     if (_accessToken == null) {
-  //       _accessToken = await apiService.getAccessToken();
-  //     }
-  //     return await onGetData();
-  //   } on Response catch (response) {
-  //     if (response.statusCode == 401) {
-  //       _accessToken = await apiService.getAccessToken();
-  //       return await onGetData();
-  //     }
-  //     rethrow;
-  //   }
-  // }
 
   Future<EndPointsData> _getAllEndpointsData() async {
     final values = await Future.wait([
