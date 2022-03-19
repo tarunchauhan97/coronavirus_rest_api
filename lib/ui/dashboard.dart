@@ -38,10 +38,13 @@ class _DashBoardState extends State<DashBoard> {
       appBar: AppBar(
         title: Text('Coronavirus Tracker'),
       ),
-      body: ListView(
-        children: [
-          EndpointCard(endPoint: EndPoint.cases, value: _cases),
-        ],
+      body: RefreshIndicator(
+        onRefresh: _updateData,
+        child: ListView(
+          children: [
+            EndpointCard(endPoint: EndPoint.cases, value: _cases),
+          ],
+        ),
       ),
     );
   }
