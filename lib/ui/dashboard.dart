@@ -44,6 +44,13 @@ class _DashBoardState extends State<DashBoard> {
           content: "Could Not get Data",
           defaultActionText: 'Ok');
     }
+    catch (_){
+      showAlertDialog(
+          context: context,
+          title: 'Unknown Error',
+          content: "Please contact support on try again later",
+          defaultActionText: 'Ok');
+    }
   }
 
   @override
