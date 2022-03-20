@@ -58,7 +58,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     final formatter = LastUpdatedDateFormatter(
-      lastUpdated: _endPointsData != null ? _endPointsData!.values[EndPoint.cases]!.date : null,
+      lastUpdated: _endPointsData != null ? _endPointsData!.values[EndPoint.cases]?.date : null,
     );
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +74,7 @@ class _DashBoardState extends State<DashBoard> {
             for (var endpoint in EndPoint.values)
               EndpointCard(
                 endPoint: endpoint,
-                value: _endPointsData != null ? _endPointsData!.values[endpoint]!.value : null,
+                value: _endPointsData != null ? _endPointsData!.values[endpoint]?.value : null,
               ),
           ],
         ),
