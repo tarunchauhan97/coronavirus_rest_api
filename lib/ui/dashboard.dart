@@ -22,6 +22,8 @@ class _DashBoardState extends State<DashBoard> {
   @override
   initState() {
     super.initState();
+    final dataRepository = Provider.of<DataRepository>(context, listen: false);
+    _endPointsData = dataRepository.getAllEndPointsCachedData();
     _updateData();
   }
 
