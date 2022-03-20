@@ -1,4 +1,5 @@
 import 'package:coronavirus_rest_api_flutter_course/app/repositories/data_repositories.dart';
+import 'package:coronavirus_rest_api_flutter_course/app/repositories/endpoints_data.dart';
 import 'package:coronavirus_rest_api_flutter_course/app/services/api.dart';
 import 'package:coronavirus_rest_api_flutter_course/ui/endpoint_card.dart';
 import 'package:flutter/material.dart';
@@ -12,23 +13,23 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  int? _cases;
+  EndPointsData? _endPointsData;
 
   @override
-  initState(){
+  initState() {
     super.initState();
     _updateData();
   }
 
   Future<void> _updateData() async {
     final dataRepository = Provider.of<DataRepository>(context, listen: false);
-    final cases = await dataRepository.getEndPointData(EndPoint.cases);
+    final endPointsData = await dataRepository.getAllEndPointsData();
     print('---------');
-    print('------${cases}---------');
-    print(cases);
+    print('------${endPointsData}---------');
+    print(endPointsData);
 
     setState(() {
-      _cases = cases;
+      _endPointsData = endPointsData;
     });
   }
 
@@ -42,7 +43,11 @@ class _DashBoardState extends State<DashBoard> {
         onRefresh: _updateData,
         child: ListView(
           children: [
-            EndpointCard(endPoint: EndPoint.cases, value: _cases),
+            for (var endpoint in EndPoint.values)
+              EndpointCard(
+                endPoint: endpoint,
+                value: _endPointsData != null ? _endPointsData!.values[endpoint] : null,
+              ),
           ],
         ),
       ),
